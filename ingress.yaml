@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-damilola-oyeyipo-ingress
+  namespace: dev
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: whateverthefuckyouwant.dev.7am.events
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - oyeyipo.dev.7am.events
+      secretName: whitelabel-sales-channel-next-tls
+  rules:
+    - host: oyeyipo.dev.7am.events
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: test-damilola-oyeyipo-svc
+                port:
+                  number: 80
+          - path: /.well-known/apple-developer-merchantid-domain-association
+            pathType: Exact
+            backend:
+              service:
+                name: apple-merchant-verification-service
+                port:
+                  number: 80

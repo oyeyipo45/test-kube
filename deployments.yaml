@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-damilola-oyeyipo-deployment
+  namespace: dev
+  labels:
+    app: test-damilola-oyeyipo-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-damilola-oyeyipo-deployment
+  template:
+    metadata:
+      labels:
+        app: test-damilola-oyeyipo-deployment
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - test-damilola-oyeyipo-deployment
+                topologyKey: "kubernetes.io/hostname"
+
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
